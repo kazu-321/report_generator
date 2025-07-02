@@ -27,13 +27,19 @@ jobs:
             echo "Building report in $dir"
             cd "$dir"
 
-            python3 ../../.github/scripts/generate_cover_tex.py settings.yaml cover.tex
+            python3 ../../.github/scripts/generate_cover_md.py settings.yaml cover.md
 
             rm -f full.md
             md_files=$(python3 ../../.github/scripts/collect_markdown_files.py settings.yaml)
 
+            cat cover.md > full.md
+            echo -e "\n\n" >> full.md
+            echo "\\newpage" >> full.md
+            echo -e "\n\n" >> full.md
             for f in $md_files; do
               cat "$f" >> full.md
+              echo -e "\n\n" >> full.md
+              echo "\\newpage" >> full.md
               echo -e "\n\n" >> full.md
             done
 
@@ -50,7 +56,6 @@ jobs:
               -V mainfont="Noto Serif CJK JP" \
               -V monofont="Noto Sans Mono CJK JP" \
               --pdf-engine=lualatex \
-              --include-before-body=cover.tex \
               $( [ "$toc" = "true" ] && echo "--toc" ) \
               -o "$output"
 

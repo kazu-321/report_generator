@@ -1,12 +1,13 @@
 title: "令和７年度 情報工学実験II 報告書"
+subtitle: "プログラミング基礎I"
 author: "橋本 千聡"
 teacher: "弘畑教員"
 experiment_dates:
-  - "10月 7日（火）"
-  - "10月14日（火）"
-submit_date: "10月14日（火）"
-deadline: "11月 4日（火）"
-final_acceptance_date: "11月18日（火）"
+  - "令和７年度　１０月　７日（火）"
+  - "令和７年度　１０月１４日（火）"
+submit_date: "令和７年度　１０月１４日（火）"
+deadline: "令和７年度　１１月　４日（火）"
+final_acceptance_date: "令和７年度　１１月１８日（火）"
 markdown: "report.md"
 output: "report.pdf"
 cover_page: true
