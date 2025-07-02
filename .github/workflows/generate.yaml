@@ -13,30 +13,39 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
-      - name: Setup Python and Install dependencies
+      - name: Setup Pandoc
+        uses: mikeal/setup-pandoc@v1
+
+      - name: Install minimal TeX Live and Japanese fonts
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive texlive-latex-base texlive-latex-recommended texlive-fonts-recommended
+          sudo apt-get install -y texlive-latex-base fonts-noto-cjk --no-install-recommends
+
+      - name: Install Python dependencies
+        run: |
           python3 -m pip install --upgrade pip
           pip install pyyaml
 
-      - name: Find all report dirs with settings.yaml
-        id: find_reports
+      - name: Build each report PDF
         run: |
           find report -mindepth 1 -maxdepth 1 -type d -exec test -e {}/settings.yaml \; -print > reports.txt
           cat reports.txt
-
-      - name: Build each report PDF
-        run: |
           while read dir; do
             echo "Building report in $dir"
             cd "$dir"
 
-            python3 ../../scripts/generate_cover_tex.py settings.yaml cover.tex
+            python3 ../../.github/scripts/generate_cover_tex.py settings.yaml cover.tex
 
             rm -f full.md
-            md_files=$(python3 ../../scripts/collect_markdown_files.py settings.yaml)
+            md_files=$(python3 ../../.github/scripts/collect_markdown_files.py settings.yaml)
 
             for f in $md_files; do
               cat "$f" >> full.md
@@ -53,13 +62,15 @@ jobs:
               -V geometry:margin=$margin \
               -V fontsize=$font_size \
               -V papersize=$paper_size \
+              -V mainfont="Noto Serif CJK JP" \
+              -V monofont="Noto Sans Mono CJK JP" \
               --pdf-engine=lualatex \
               --include-before-body=cover.tex \
               $( [ "$toc" = "true" ] && echo "--toc" ) \
               -o "$output"
 
             cd ../../
-          done
+          done < reports.txt
 
       - uses: actions/upload-artifact@v4
         with:
