@@ -1,0 +1,18 @@
+author: "橋本 千聡"
+teacher: "弘畑教員"
+experiment_dates:
+  - "10月 7日（火）"
+  - "10月14日（火）"
+submit_date: "10月14日（火）"
+deadline: "11月 4日（火）"
+final_acceptance_date: "11月18日（火）"
+markdown: "report.md"
+output: "report.pdf"
+cover_page: true
+toc: false
+font_size: 12pt
+paper_size: a4
+margin: "2cm"
+pandoc_options:
+  - "--pdf-engine=lualatex"
+  - "--highlight-style=pygments"

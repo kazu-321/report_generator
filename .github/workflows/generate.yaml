@@ -1,0 +1,67 @@
+# .github/workflows/generate.yaml
+
+name: Generate All Reports PDFs
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_all_reports:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python and Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive texlive-latex-base texlive-latex-recommended texlive-fonts-recommended
+          python3 -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Find all report dirs with settings.yaml
+        id: find_reports
+        run: |
+          find report -mindepth 1 -maxdepth 1 -type d -exec test -e {}/settings.yaml \; -print > reports.txt
+          cat reports.txt
+
+      - name: Build each report PDF
+        run: |
+          while read dir; do
+            echo "Building report in $dir"
+            cd "$dir"
+
+            python3 ../../scripts/generate_cover_tex.py settings.yaml cover.tex
+
+            rm -f full.md
+            md_files=$(python3 ../../scripts/collect_markdown_files.py settings.yaml)
+
+            for f in $md_files; do
+              cat "$f" >> full.md
+              echo -e "\n\n" >> full.md
+            done
+
+            font_size=$(grep font_size settings.yaml | cut -d: -f2 | xargs)
+            paper_size=$(grep paper_size settings.yaml | cut -d: -f2 | xargs)
+            margin=$(grep margin settings.yaml | cut -d: -f2 | xargs)
+            output=$(grep output settings.yaml | cut -d: -f2 | xargs)
+            toc=$(grep toc settings.yaml | cut -d: -f2 | xargs)
+
+            pandoc full.md \
+              -V geometry:margin=$margin \
+              -V fontsize=$font_size \
+              -V papersize=$paper_size \
+              --pdf-engine=lualatex \
+              --include-before-body=cover.tex \
+              $( [ "$toc" = "true" ] && echo "--toc" ) \
+              -o "$output"
+
+            cd ../../
+          done < ../reports.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: all-generated-reports
+          path: report/*/*.pdf
