@@ -59,7 +59,7 @@ jobs:
               -o "$output"
 
             cd ../../
-          done < ../reports.txt
+          done
 
       - uses: actions/upload-artifact@v4
         with:
