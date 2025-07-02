@@ -13,25 +13,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Cache pip
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Setup Pandoc
-        uses: mikeal/setup-pandoc@v1
-
-      - name: Install minimal TeX Live and Japanese fonts
+      - name: Install 
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-latex-base fonts-noto-cjk --no-install-recommends
-
-      - name: Install Python dependencies
-        run: |
-          python3 -m pip install --upgrade pip
+          sudo apt-get install -y pandoc texlive-latex-base fonts-noto-cjk --no-install-recommends
           pip install pyyaml
 
       - name: Build each report PDF
