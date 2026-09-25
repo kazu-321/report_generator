@@ -1,0 +1,20 @@
+title: "令和８年度 情報工学実験III 報告書"
+subtitle: "プログラミング演習III"
+author: "橋本 千聡"
+teacher: "滝沢教員"
+experiment_dates:
+  - "令和８年度　９月２５日（金）"
+  - "令和８年度１０月０２日（金）"
+submit_date: "令和８年度　　９月２５日（金）"
+deadline: "令和８年度　１０月　９日（金）"
+final_acceptance_date: "令和８年度　１０月１６日（金）"
+markdown: "report.md"
+output: "report.pdf"
+cover_page: true
+toc: false
+font_size: 12pt
+paper_size: a4
+margin: "2cm"
+pandoc_options:
+  - "--pdf-engine=lualatex"
+  - "--highlight-style=pygments"
