@@ -12,7 +12,7 @@ markdown: "report.md"
 output: "report.pdf"
 cover_page: true
 toc: false
-font_size: 12pt
+font_size: 10pt
 paper_size: a4
 margin: "2cm"
 pandoc_options:
