@@ -60,6 +60,7 @@ jobs:
               -V papersize=$paper_size \
               -V mainfont="Noto Serif CJK JP" \
               -V monofont="Noto Sans Mono CJK JP" \
+              -V figure-placement=H \
               --pdf-engine=xelatex \
               $( [ -f header.tex ] && echo "-H header.tex" ) \
               $( [ "$toc" = "true" ] && echo "--toc" ) \
