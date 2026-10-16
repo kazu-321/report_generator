@@ -1,0 +1,5 @@
+flowchart TD
+    A[文字列を入力] --> B[改行を削除]
+    B --> C{^[01]+5$に一致するか}
+    C -- 一致 --> D[acceptedを表示]
+    C -- 不一致 --> E[not acceptedを表示]
